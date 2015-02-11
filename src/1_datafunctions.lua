@@ -53,21 +53,22 @@ function random_crop(_im)
    local _r = torch.rand(1)
 
    if(im_size[1] < im_size[2]) then
-      start_x = math.ceil(_r[1] * (im_size[2]-crop_size[2]+1))
+      start_x = math.ceil(_r[1] * (im_size[2]-crop_size[2]))
       end_x = start_x + crop_size[2]
    else
-      start_y = math.ceil(_r[1] * (im_size[1]-crop_size[1]+1))
+      start_y = math.ceil(_r[1] * (im_size[1]-crop_size[1]))
       end_y = start_y + crop_size[1]
    end
+--   print(im_size)
+--   print(crop_size)
+--   print(start_x)
+--   print(start_y)
+--   print(end_x)
+--   print(end_y)
+
    _im = image.crop(_im, start_x, start_y, end_x, end_y)
 
-   print(im_size)
-   print(crop_size)
-   print(start_x)
-   print(start_y)
-   print(end_x)
-   print(end_y)
-   print(_im:size())
+--   print(_im:size())
    return _im
 end
 

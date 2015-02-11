@@ -1,6 +1,7 @@
 require 'csvigo'
 require 'paths'
 require 'image'
+dofile('1_datafunctions.lua')
 
 dataRoot='../data/'
 
@@ -106,26 +107,45 @@ print('Testing samples: ' .. nTesting)
 
 --TODO Check the random pick from pool if added back to pool
 function getSample()
-   local i = torch.uniform(1, nTraining)
-   local filename = paths.concat(dataRoot,
+   local _i = torch.uniform(1, nTraining)
+   local _filename = paths.concat(dataRoot,
                                  'train',
-                                 classIdToName[trainData[i][2]],
-                                 tostring(trainData[i][1]) .. '.jpg')
-   local im = image.load(filename, 1)
+                                 classIdToName[trainData[_i][2]],
+                                 tostring(trainData[_i][1]) .. '.jpg')
+   local _im = image.load(_filename, 1)
+   _im = random_crop(_im)
    --im = jitter(im)
-   im:add(-im:mean())
-   im:div(im:std())
-   local labels = torch.Tensor(nClasses):zero()
-   labels[trainData[i][2]] = 1
-   return im, labels
+   _im:add(-_im:mean())
+   _im:div(_im:std())
+--   local _labels = torch.Tensor(nClasses):zero()
+--   labels[trainData[_i][2]] = 1
+--   return _im, _labels
+   return _im, trainData[_i][2]
 end
 
 function getBatch(n)
    local _img, _labels
    _img = torch.Tensor(n, sampleSize[1], sampleSize[2])
-   _labels = torch.Tensor(n, nClasses)
+   _labels = torch.Tensor(n)
    for i=1,n do
       _img[i], _labels[i] = getSample()
    end
    return _img, _labels
+end
+
+function getTest(_i, light_testing)
+   local _filename = paths.concat(dataRoot,
+                                 'train',
+                                 classIdToName[testData[_i][2]],
+                                 tostring(trainData[_i][1]) .. '.jpg')
+   local _im = image.load(_filename, 1)
+--   im = expandTestSample(im, lightTesting)
+   _im:add(-_im:mean())
+   _im:div(_im:std())
+
+--   local _labels = torch.Tensor(nClasses):zero()
+--   labels[testData[_i][2]] = 1
+--   return _im, _labels
+
+   return _im, testData[_i][2]
 end
