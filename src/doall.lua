@@ -6,7 +6,7 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text('DataScienceBowl Training script')
 cmd:text()
-	cmd:text('Options:')
+cmd:text('Options:')
 cmd:option('-seed',            1,           'fixed input seed for repeatable experiments')
 cmd:option('-threads',         1,           'number of threads')
 cmd:option('-gpuid',           1,           'gpu id')
@@ -33,7 +33,10 @@ dataRoot = "../data/"
 
 lightTesting = true
 
+--Number of images to be used for each epoch
 epochSize = opt.batchSize * 1000
+--Max number of epochs to run the experiment for
+--Keep it higher and kill the process upon convergence
 maxEpochs = 20
 
 dofile('1_data.lua')
@@ -43,6 +46,7 @@ if not opt.dataTest then
    dofile('4_test.lua')
 
    epoch = 0
+   --get the initial error on random weights wthout training
    test()
    while (epoch < maxEpochs) do
       epoch = epoch + 1

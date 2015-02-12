@@ -28,14 +28,26 @@ features:add(nn.Threshold(0,1e-6))
 features:add(nn.SpatialMaxPooling(2,2,2,2)) -- 3
 features:add(nn.View(featuresOut))-- features size
 
-classifier_layer = nn.Sequential()
-classifier_layer:add(nn.Linear(featuresOut, classifierHidden[1]))
-classifier_layer:add(nn.Threshold(0, 1e-6))
-classifier_layer:add(nn.Linear(classifierHidden[1], nClasses))
-classifier_layer:add(nn.LogSoftMax())
+full_layer = nn.Sequential()
+
+if opt.dropout then
+   dropouts = nn.Dropout(dropout_prob)
+   full_layer:add(dropouts)
+end
+
+full_layer:add(nn.Linear(featuresOut, classifierHidden[1]))
+full_layer:add(nn.Threshold(0, 1e-6))
+
+if opt.dropout then
+   dropouts = nn.Dropout(dropout_prob)
+   full_layer:add(dropouts)
+end
+
+full_layer:add(nn.Linear(classifierHidden[1], nClasses))
+full_layer:add(nn.LogSoftMax())
 
 model = nn.Sequential()
 model:add(features)
-model:add(classifier_layer)
+model:add(full_layer)
 
 criterion = nn.ClassNLLCriterion()

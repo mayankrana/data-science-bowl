@@ -132,8 +132,6 @@ function getBatch(n)
    for i=1,n do
       _img[i], _labels[i] = getSample()
    end
---   print('batch size:')
---   print(_img:size())
    return _img, _labels
 end
 
@@ -148,10 +146,6 @@ function getTest(_i, light_testing)
    _im = scale(_im)
    _im:add(-_im:mean())
    _im:div(_im:std())
-
---   local _labels = torch.Tensor(nClasses):zero()
---   labels[testData[_i][2]] = 1
---   return _im, _labels
 
    return _im, testData[_i][2]
 end
