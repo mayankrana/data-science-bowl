@@ -7,7 +7,8 @@ dataRoot='../data/'
 
 os.execute('mkdir -p ../data/cache')
 print '=> 1_data.lua'
-print '==>  Loading data'
+print('-----------')
+print '==> <1_data.lua>: Loading data'
 
 nSamples=0
 nClasses=0
@@ -25,7 +26,7 @@ function getClassInfo()
                                    verbose=false}
       -- first entity is "image"(not a class name) so skip it
       n_classes = #csv_data[1] - 1
-      print('==>  Number of classes=' .. n_classes)
+      print('<1_data.lua>: Number of classes=' .. n_classes)
       for i=1,n_classes do
          class_id_to_name[i] = csv_data[1][i+1]
          class_name_to_id[csv_data[1][i+1]] = i
@@ -33,10 +34,10 @@ function getClassInfo()
       local class_info = {["class_id_to_name"]=class_id_to_name,
          ["class_name_to_id"]=class_name_to_id,
          ["n_classes"]=n_classes}
-      print '==>  Saving class info to disk'
+      print '<1_data.lua>: Saving class info to disk'
       torch.save(dataRoot .. 'cache/class_info.dat',class_info)
    else
-      print('==>  Cached class info found, Loading from cache')
+      print('<1_data.lua>: Cached class info found, Loading from cache')
       local class_info = torch.load(dataRoot .. 'cache/class_info.dat')
       class_name_to_id = class_info["class_name_to_id"]
       class_id_to_name = class_info["class_id_to_name"]
@@ -67,10 +68,10 @@ if not paths.filep(dataRoot .. 'cache/data.t7') then
          end
       end
    end
-   print '==>  Saving data to disk'
+   print '<1_data.lua>: Saving data to disk'
    torch.save(dataRoot .. 'cache/data.t7', data)
 else
-   print('==>  Cached data found, Loading from cache')
+   print('<1_data.lua>: Cached data found, Loading from cache')
    data = torch.load(dataRoot .. 'cache/data.t7')
    nSamples = data:size(1)
 end
@@ -101,9 +102,9 @@ end
 i=nil
 collectgarbage()
 --=======================
-print('Number of Samples: ' .. nSamples)
-print('Training samples: ' .. nTraining)
-print('Testing samples: ' .. nTesting)
+print('<1_data.lua>: Number of Samples: ' .. nSamples)
+print('<1_data.lua>: Training samples: ' .. nTraining)
+print('<1_data.lua>: Testing samples: ' .. nTesting)
 
 --TODO Check the random pick from pool if added back to pool
 function getSample()
@@ -114,6 +115,7 @@ function getSample()
                                  tostring(trainData[_i][1]) .. '.jpg')
    local _im = image.load(_filename, 1)
    _im = random_crop(_im)
+   _im = scale(_im)
    --im = jitter(im)
    _im:add(-_im:mean())
    _im:div(_im:std())
@@ -125,11 +127,13 @@ end
 
 function getBatch(n)
    local _img, _labels
-   _img = torch.Tensor(n, sampleSize[1], sampleSize[2])
+   _img = torch.Tensor(n, sampleSize[1],sampleSize[2], sampleSize[3])
    _labels = torch.Tensor(n)
    for i=1,n do
       _img[i], _labels[i] = getSample()
    end
+--   print('batch size:')
+--   print(_img:size())
    return _img, _labels
 end
 
@@ -137,9 +141,11 @@ function getTest(_i, light_testing)
    local _filename = paths.concat(dataRoot,
                                  'train',
                                  classIdToName[testData[_i][2]],
-                                 tostring(trainData[_i][1]) .. '.jpg')
+                                 tostring(testData[_i][1]) .. '.jpg')
    local _im = image.load(_filename, 1)
 --   im = expandTestSample(im, lightTesting)
+   _im = random_crop(_im)
+   _im = scale(_im)
    _im:add(-_im:mean())
    _im:div(_im:std())
 

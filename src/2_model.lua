@@ -1,8 +1,10 @@
+require 'torch'
 require 'nn'
 require 'nnx'
+require 'cunn'
 
 print '=> 2_model.lua'
-print '==>  Defining CNN model'
+print '<2_model.lua>: Defining CNN model'
 -- features size
 fSize = {1, 96, 256, 256, 256}
 featuresOut = fSize[5] * 3 * 3
@@ -12,7 +14,7 @@ classifierHidden = {512}
 dropout_prob = 0.5
 
 features = nn.Sequential()
-features:add(nn.SpatialConvolutionMM(fSize[1], fSize[2], 7, 7)) -- (90 - 7 + 1)=84
+features:add(nn.SpatialConvolutionMM(fSize[1], fSize[2], 7, 7)) -- 90-6=84
 features:add(nn.Threshold(0,1e-6))
 features:add(nn.SpatialMaxPooling(2,2,2,2)) -- 42
 features:add(nn.SpatialConvolutionMM(fSize[2], fSize[3], 5, 5)) -- 38

@@ -4,7 +4,7 @@ require 'optim'   -- an optimization package, for online and batch methods
 
 ----------------------------------------------------------------------
 print '=> 3_train.lua'
-print '==>  defining some tools'
+print '<3_train.lua>: Defining some tools'
 
 trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
 
@@ -21,7 +21,7 @@ if model then
    collectgarbage()
 end
 
-print '==> configuring optimizer'
+print '<3_train.lua>: configuring optimizer'
 
 optimState = {
    learningRate = opt.learningRate,
@@ -31,7 +31,7 @@ optimState = {
 }
 optimMethod = optim.sgd
 
-print '==> defining training procedure'
+print '<3_train.lua>: Defining training procedure'
 function train()
 
    -- epoch tracker
@@ -99,7 +99,7 @@ function train()
    print("<trainer> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
    nll_error = nll_error/epochSize
-   print('epoch: ' .. epoch .. ' + logloss (train set) : ', nll_error)
+   print('==>epoch: ' .. epoch .. ', logloss (train set): ', nll_error)
    print('')
    print('')
    trainLogger:add{['logloss (train set)'] = nll_error}

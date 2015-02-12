@@ -6,7 +6,7 @@ cmd = torch.CmdLine()
 cmd:text()
 cmd:text('DataScienceBowl Training script')
 cmd:text()
-cmd:text('Options:')
+	cmd:text('Options:')
 cmd:option('-seed',            1,           'fixed input seed for repeatable experiments')
 cmd:option('-threads',         1,           'number of threads')
 cmd:option('-gpuid',           1,           'gpu id')
@@ -27,13 +27,14 @@ torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 cutorch.setDevice(opt.gpuid)
 
-sampleSize = {1, 96, 96}
+sampleSize = {1, 90, 90}
 
 dataRoot = "../data/"
 
 lightTesting = true
 
-epochSize = opt.batchSize * 10
+epochSize = opt.batchSize * 1000
+maxEpochs = 20
 
 dofile('1_data.lua')
 if not opt.dataTest then
@@ -43,7 +44,7 @@ if not opt.dataTest then
 
    epoch = 0
    test()
-   while (epoch < epochSize) do
+   while (epoch < maxEpochs) do
       epoch = epoch + 1
       collectgarbage()
       train()

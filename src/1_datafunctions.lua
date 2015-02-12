@@ -28,7 +28,7 @@ end
 
 function scale(_im)
    --rescale it to sampleSize
-   _im = image.scale(_im, sampleSize[1], sampleSize[2])
+   _im = image.scale(_im, sampleSize[2], sampleSize[3])
    return _im
 end
 
