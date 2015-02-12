@@ -99,7 +99,7 @@ function train()
    print("<trainer> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
    nll_error = nll_error/epochSize
-   print('==>epoch: ' .. epoch .. ', logloss (train set): ', nll_error)
+   print('===>epoch: ' .. epoch .. ', logloss (train set): ' .. nll_error)
    print('')
    print('')
    trainLogger:add{['logloss (train set)'] = nll_error}
