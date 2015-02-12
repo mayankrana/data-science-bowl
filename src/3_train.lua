@@ -6,7 +6,7 @@ require 'optim'   -- an optimization package, for online and batch methods
 print '=> 3_train.lua'
 print '<3_train.lua>: Defining some tools'
 
-trainLogger = optim.Logger(paths.concat(opt.save, 'train.log'))
+trainLogger = optim.Logger(paths.concat(opt.results_path, 'train.log'))
 
 if model then
    if opt.retrain ~= "none" then

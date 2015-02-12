@@ -10,15 +10,17 @@ cmd:text('Options:')
 cmd:option('-seed',            1,           'fixed input seed for repeatable experiments')
 cmd:option('-threads',         1,           'number of threads')
 cmd:option('-gpuid',           1,           'gpu id')
-cmd:option('-save',            'results',   'subdirectory to save/log experiments in')
+cmd:option('-save',            true,        'save/log experiments')
+cmd:option('-plot',            true,        'save plot for error')
+cmd:option('-results_path',    'results',   'subdirectory to save/log experiments in')
 cmd:option('-learningRate',    5e-2,        'learning rate at t=0')
-cmd:option('-momentum',          0.6,        'momentum')
-cmd:option('-weightDecay',       1e-5,        'weight decay')
-cmd:option('-batchSize',       32,           'mini-batch size (1 = pure stochastic)')
-cmd:option('-progressBar',     true,       'Display a progress bar')
-cmd:option('-dataTest',     false,       'visual sanity checks for data loading')
-cmd:option('-dropout',     false,       'do dropout with 0.5 probability')
-cmd:option('-retrain',     "none",       'provide path to model to retrain with')
+cmd:option('-momentum',        0.6,         'momentum')
+cmd:option('-weightDecay',     1e-5,        'weight decay')
+cmd:option('-batchSize',       32,          'mini-batch size (1 = pure stochastic)')
+cmd:option('-progressBar',     true,        'Display a progress bar')
+cmd:option('-dataTest',        false,       'visual sanity checks for data loading')
+cmd:option('-dropout',         false,       'do dropout with 0.5 probability')
+cmd:option('-retrain',         "none",      'provide path to model to retrain with')
 cmd:text()
 opt = cmd:parse(arg or {})
 
@@ -54,6 +56,22 @@ if not opt.dataTest then
       train()
       collectgarbage()
       test()
+
+      --Save train and test score to log files
+      if opt.plot then
+         local filename = paths.concat(opt.results_path, 'train.log')
+         os.execute('mkdir -p ' .. sys.dirname(filename))
+         print('Saving training score to '..filename)
+         trainLogger:style{['% mean class accuracy (train set)'] = '-'}
+         trainLogger:plot()
+         table.save(trainLogger, filename)
+
+         local filename = paths.concat(opt.results_path, 'test.log')
+         print('Saving test score to '..filename)
+         testLogger:style{['% mean class accuracy (train set)'] = '-'}
+         testLogger:plot()
+         table.save(testLogger, filename)
+      end
 --      if epoch == 50 then lightTesting = false; end
    end
 end

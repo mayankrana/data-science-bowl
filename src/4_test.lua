@@ -5,7 +5,7 @@ require 'image'
 
 print '=> 4_test.lua'
 print '<4_test.lua>: Defining test procedure'
-testLogger = optim.Logger(paths.concat(opt.save, 'test.log'))
+testLogger = optim.Logger(paths.concat(opt.results_path, 'test.log'))
 
 -- test function
 function test()
@@ -35,12 +35,6 @@ function test()
    print('==> epoch: ' .. epoch .. ', logloss (test set) : ' .. nll_error )
    testLogger:add{['logloss (test set)'] = nll_error}
 
-   -- save/log current net
-   local filename = paths.concat(opt.save, 'model_' .. epoch .. '.net')
-   os.execute('mkdir -p ' .. sys.dirname(filename))
-   print('<trainer> saving network to '..filename)
-   print('')
-   print('')
    -- save L1 filters to image file, just for funsies
    local weight_l1 = model.modules[1].modules[1].weight:float()
    local filters_l1 = {}
@@ -50,6 +44,15 @@ function test()
    image.save('results/l1_' .. epoch .. '.png', image.toDisplayTensor{input=filters_l1,
                                                                       padding=3})
    image.save('results/l1color_' .. epoch .. '.png', image.toDisplayTensor{input=weight_l1, padding=3})
-   -- save network to disk finally
-   torch.save(filename, model)
+
+   if opt.save then
+      -- save/log current net
+      local filename = paths.concat(opt.results_path, 'model_' .. epoch .. '.net')
+      os.execute('mkdir -p ' .. sys.dirname(filename))
+      print('<trainer> saving network to '..filename)
+      print('')
+      print('')
+      -- save network to disk finally
+      torch.save(filename, model)
+   end
 end
