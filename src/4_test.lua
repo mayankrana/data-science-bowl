@@ -32,7 +32,7 @@ function test()
    time = time/nTesting
    print("==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
-   print('====> epoch: ' .. epoch .. ', logloss (test set) : ' .. nll_error )
+   print('====> epoch: ' .. epoch .. ', logloss (test set) : ', nll_error )
    print('')
    testLogger:add{['logloss (test set)'] = nll_error}
 
