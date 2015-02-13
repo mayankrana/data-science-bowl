@@ -2,26 +2,26 @@ require 'image'
 require 'nn'
 
 function random_v_flip(_im)
-   local r = torch.rand(1)
-   if r > 0.5 then
+   local _r = torch.rand(1)
+   if _r[1] > 0.5 then
       _im = image.vflip(_im)
    end
    return _im
 end
 
 function random_h_flip(_im)
-   local r = torch.rand(1)
-   if r > 0.5 then
+   local _r = torch.rand(1)
+   if _r[1] > 0.5 then
       _im = image.hflip(_im)
    end
    return _im
 end
 
 function random_rotation(_im)
-   local r = torch.rand(1)
-   if r > 0.5 then
+   local _r = torch.rand(1)
+   if _r[1] > 0.5 then
       --if vertical or horizontal random flip is applied then rotation < 90
-      _im = image.rotate(im, math.pi/2)
+      _im = image.rotate(_im, math.pi/2)
    end
    return _im
 end

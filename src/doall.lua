@@ -30,7 +30,7 @@ torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 cutorch.setDevice(opt.gpuid)
 
-sampleSize = {1, 90, 90}
+sampleSize = {1, 46, 46}
 
 dataRoot = "../data/"
 
@@ -40,11 +40,11 @@ lightTesting = true
 epochSize = opt.batchSize * 1000
 --Max number of epochs to run the experiment for
 --Keep it higher and kill the process upon convergence
-maxEpochs = 20
+maxEpochs = 100
 
 dofile('1_data.lua')
 if not opt.dataTest then
-   dofile('2_model.lua')
+   dofile('2_model_size_46.lua')
    dofile('3_train.lua')
    dofile('4_test.lua')
 
