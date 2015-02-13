@@ -114,14 +114,9 @@ function getSample()
                                  classIdToName[trainData[_i][2]],
                                  tostring(trainData[_i][1]) .. '.jpg')
    local _im = image.load(_filename, 1)
-   _im = random_crop(_im)
+   _im = dataAugmentation(_im)
    _im = scale(_im)
-   --im = jitter(im)
-   _im:add(-_im:mean())
-   _im:div(_im:std())
---   local _labels = torch.Tensor(nClasses):zero()
---   labels[trainData[_i][2]] = 1
---   return _im, _labels
+   _im = dataNormalization(_im)
    return _im, trainData[_i][2]
 end
 
@@ -142,10 +137,10 @@ function getTest(_i, light_testing)
                                  tostring(testData[_i][1]) .. '.jpg')
    local _im = image.load(_filename, 1)
 --   im = expandTestSample(im, lightTesting)
+--   _im=data_augmentation(_im)
    _im = random_crop(_im)
    _im = scale(_im)
-   _im:add(-_im:mean())
-   _im:div(_im:std())
+   _im=dataNormalization(_im)
 
    return _im, testData[_i][2]
 end

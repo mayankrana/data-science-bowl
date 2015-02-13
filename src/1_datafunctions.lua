@@ -21,7 +21,7 @@ function random_rotation(_im)
    local r = torch.rand(1)
    if r > 0.5 then
       --if vertical or horizontal random flip is applied then rotation < 90
-      _im = image.rotate(im, math.pi/2 * r)
+      _im = image.rotate(im, math.pi/2)
    end
    return _im
 end
@@ -122,5 +122,19 @@ function jitter(_im)
    local end_y = start_y + crop_size[2]
    _im = image.crop(_im, start_x, start_y, end_x, end_y)
    _im = scale(_im)
+   return _im
+end
+
+function dataAugmentation(_im)
+   _im = random_crop(_im)
+   _im = random_v_flip(_im)
+   _im = random_h_flip(_im)
+   _im = random_rotation(_im)
+   return _im
+end
+
+function dataNormalization(_im)
+   _im:add(-_im:mean())
+   _im:div(_im:std())
    return _im
 end
