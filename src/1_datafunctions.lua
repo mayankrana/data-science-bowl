@@ -129,7 +129,7 @@ function dataAugmentation(_im)
    _im = random_crop(_im)
    _im = random_v_flip(_im)
    _im = random_h_flip(_im)
-   _im = random_rotation(_im)
+--   _im = random_rotation(_im)
    return _im
 end
 

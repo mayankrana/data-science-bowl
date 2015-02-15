@@ -10,7 +10,7 @@ fSize = {1, 96, 256, 256, 256}
 featuresOut = fSize[5] * 3 * 3
 
 -- classifier size
-classifierHidden = {512}
+classifierHidden = {1024}
 dropout_prob = 0.5
 
 features = nn.Sequential()

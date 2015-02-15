@@ -14,10 +14,10 @@ cmd:option('-save',            false,       'save models')
 cmd:option('-log',             true,        'save log')
 cmd:option('-plot',            false,       'save plot for error')
 cmd:option('-results_path',    'results/exp_tmp',   'subdirectory to save/log experiments in')
-cmd:option('-learningRate',    5e-2,        'learning rate at t=0')
-cmd:option('-momentum',        0.6,         'momentum')
-cmd:option('-weightDecay',     1e-5,        'weight decay')
-cmd:option('-batchSize',       32,          'mini-batch size (1 = pure stochastic)')
+cmd:option('-learningRate',    10e-2,        'learning rate at t=0')--5e-2
+cmd:option('-momentum',        0.6,         'momentum')--0.6
+cmd:option('-weightDecay',     1e-5,        'weight decay')--1e-5
+cmd:option('-batchSize',       64,          'mini-batch size (1 = pure stochastic)')
 cmd:option('-progressBar',     true,        'Display a progress bar')
 cmd:option('-dataTest',        false,       'visual sanity checks for data loading')
 cmd:option('-dropout',         true,       'do dropout with 0.5 probability')
