@@ -13,7 +13,7 @@ cmd:option('-gpuid',           1,           'gpu id')
 cmd:option('-save',            false,       'save models')
 cmd:option('-log',             true,        'save log')
 cmd:option('-plot',            false,       'save plot for error')
-cmd:option('-results_path',    'results/exp_tmp',   'subdirectory to save/log experiments in')
+cmd:option('-results_path',    'results/exp_3_3_hidden2_1024',   'subdirectory to save/log experiments in')
 cmd:option('-learningRate',    10e-2,        'learning rate at t=0')--5e-2
 cmd:option('-momentum',        0.6,         'momentum')--0.6
 cmd:option('-weightDecay',     1e-5,        'weight decay')--1e-5
@@ -30,7 +30,7 @@ torch.setnumthreads(opt.threads)
 torch.manualSeed(opt.seed)
 cutorch.setDevice(opt.gpuid)
 
-sampleSize = {1, 46, 46}
+sampleSize = {1, 48, 48}
 
 dataRoot = "../data/"
 
@@ -44,7 +44,7 @@ maxEpochs = 100
 
 dofile('1_data.lua')
 if not opt.dataTest then
-   dofile('2_model_size_46.lua')
+   dofile('2_model_size_48_2_hidden2_1024.lua')
    dofile('3_train.lua')
    dofile('4_test.lua')
 
