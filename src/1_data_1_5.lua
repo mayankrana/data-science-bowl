@@ -109,31 +109,35 @@ print('<1_data.lua>: Testing samples: ' .. nTesting)
 --TODO Check the random pick from pool if added back to pool
 function getSample()
    local _i = torch.uniform(1, nTraining)
+   local _label = trainData[_i][2]
    local _filename = paths.concat(dataRoot,
                                  'train',
-                                 classIdToName[trainData[_i][2]],
+                                 classIdToName[_label],
                                  tostring(trainData[_i][1]) .. '.jpg')
    local _im = image.load(_filename, 1)
    _im = dataAugmentation(_im)
    _im = scale(_im)
    _im = dataNormalization(_im)
-   return _im, trainData[_i][2]
+   local sparse_labels = torch.Tensor(nClasses):zero()
+   sparse_labels[_label] = 1
+   return _im, sparse_labels, _label
 end
 
 function getBatch(n)
-   local _img, _labels
-   _img = torch.Tensor(n, sampleSize[1],sampleSize[2], sampleSize[3])
-   _labels = torch.Tensor(n)
+   local _img = torch.Tensor(n, sampleSize[1],sampleSize[2], sampleSize[3])
+   local sparse_labels = torch.Tensor(n,nClasses):zero()
+   local _labels = torch.Tensor(n):zero()
    for i=1,n do
-      _img[i], _labels[i] = getSample()
+      _img[i], sparse_labels[i], _labels[i] = getSample()
    end
-   return _img, _labels
+   return _img, sparse_labels, _labels
 end
 
 function getTest(_i, light_testing)
+   local _label = testData[_i][2]
    local _filename = paths.concat(dataRoot,
                                  'train',
-                                 classIdToName[testData[_i][2]],
+                                 classIdToName[_label],
                                  tostring(testData[_i][1]) .. '.jpg')
    local _im = image.load(_filename, 1)
 --   im = expandTestSample(im, lightTesting)
@@ -141,6 +145,7 @@ function getTest(_i, light_testing)
    _im = random_crop(_im)
    _im = scale(_im)
    _im=dataNormalization(_im)
-
-   return _im, testData[_i][2]
+   local sparse_labels = torch.Tensor(nClasses):zero()
+   sparse_labels[_label] = 1
+   return _im, sparse_labels, _label
 end
