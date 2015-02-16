@@ -13,10 +13,10 @@ print '==> <1_data.lua>: Loading data'
 nSamples=0
 nClasses=0
 local i=1
+class_id_to_name = {}
+class_name_to_id = {}
 
-function getClassInfo()
-   local class_id_to_name = {}
-   local class_name_to_id = {}
+function getClassInfo()  
    local n_classes = 0
    if not paths.filep(dataRoot .. 'cache/class_info.dat') then
       --Read the sample submission csv to get the names of all the classes and

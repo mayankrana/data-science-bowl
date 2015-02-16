@@ -27,9 +27,13 @@ optimState = {
    learningRate = opt.learningRate,
    weightDecay = opt.weightDecay,
    momentum = opt.momentum,
-   learningRateDecay = 5e-7
+   learningRateDecay = opt.learningRateDecay
 }
 optimMethod = optim.sgd
+
+
+-- This matrix records the current confusion across classes
+--local confusion = optim.ConfusionMatrix(class_id_to_name)
 
 print '<3_train.lua>: Defining training procedure'
 function train()
@@ -78,6 +82,7 @@ function train()
             -- sum individual RMSE
             nll_error = nll_error + err
             f = f + err
+--	    confusion:add(output[i],targets[i])
          end
          model:backward(inputs, df_dw:cuda())
          -- normalize gradients and f(X)
@@ -98,10 +103,15 @@ function train()
    time = time/epochSize
    print("<trainer> time to learn 1 sample = " .. (time*1000) .. 'ms')
 
+--   print(confusion)
+
    nll_error = nll_error/epochSize
    print('===>epoch: ' .. epoch .. ', logloss (train set): ', nll_error)
    print('')
    print('')
    trainLogger:add{['logloss (train set)'] = nll_error}
+--   trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
 
+   -- next epoch
+--   confusion:zero()
 end

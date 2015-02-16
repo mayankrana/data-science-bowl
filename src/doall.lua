@@ -13,11 +13,12 @@ cmd:option('-gpuid',           1,           'gpu id')
 cmd:option('-save',            false,       'save models')
 cmd:option('-log',             true,        'save log')
 cmd:option('-plot',            false,       'save plot for error')
-cmd:option('-results_path',    'results/exp_3_3_hidden_2048',   'subdirectory to save/log experiments in')
-cmd:option('-learningRate',    10e-2,        'learning rate at t=0')--5e-2
+cmd:option('-results_path',    'results/exp_tmp_2',   'subdirectory to save/log experiments in')
+cmd:option('-learningRate',    1e-1,        'learning rate at t=0')--5e-2
+cmd:option('-learningRateDecay',  1e-4,        'learning rate decay')--5e-7
 cmd:option('-momentum',        0.6,         'momentum')--0.6
 cmd:option('-weightDecay',     1e-5,        'weight decay')--1e-5
-cmd:option('-batchSize',       64,          'mini-batch size (1 = pure stochastic)')
+cmd:option('-batchSize',       32,          'mini-batch size (1 = pure stochastic)')
 cmd:option('-progressBar',     true,        'Display a progress bar')
 cmd:option('-dataTest',        false,       'visual sanity checks for data loading')
 cmd:option('-dropout',         true,       'do dropout with 0.5 probability')
@@ -37,10 +38,11 @@ dataRoot = "../data/"
 lightTesting = true
 
 --Number of images to be used for each epoch
-epochSize = opt.batchSize * 1000
+epochSize = opt.batchSize * 1000 --32k
+
 --Max number of epochs to run the experiment for
 --Keep it higher and kill the process upon convergence
-maxEpochs = 100
+maxEpochs = 50
 
 dofile('1_data.lua')
 if not opt.dataTest then

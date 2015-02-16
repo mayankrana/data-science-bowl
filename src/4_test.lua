@@ -7,6 +7,9 @@ print '=> 4_test.lua'
 print '<4_test.lua>: Defining test procedure'
 testLogger = optim.Logger(paths.concat(opt.results_path, 'test.log'))
 
+-- This matrix records the current confusion across classes
+confusion = optim.ConfusionMatrix(class_id_to_name)
+
 -- test function
 function test()
    epoch = epoch or 1
@@ -25,6 +28,7 @@ function test()
       output = output:float()
       local err = criterion:forward(output, target)
       nll_error = nll_error + err
+      confusion:add(output, target)
    end
    nll_error = nll_error/nTesting
    -- timing
@@ -32,9 +36,14 @@ function test()
    time = time/nTesting
    print("==> time to test 1 sample = " .. (time*1000) .. 'ms')
 
+-- print confusion matrix
+   print(confusion.totalValid*100)
+
    print('====> epoch: ' .. epoch .. ', logloss (test set) : ', nll_error )
    print('')
    testLogger:add{['logloss (test set)'] = nll_error}
+--   testLogger:add{['% mean class accuracy (test set)'] = confusion.totalValid * 100}
+   confusion:zero()
 
    -- save L1 filters to image file, just for funsies
    local weight_l1 = model.modules[1].modules[1].weight:float()
