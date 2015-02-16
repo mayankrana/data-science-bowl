@@ -25,10 +25,10 @@ function test()
       if opt.progressBar then xlua.progress(_t, nTesting) end
       -- test sample
       -- target is sparse label
-      local _input, _target, _label = getTest(t, lightTesting)
+      local _input, _target, _label = getTest(_t, lightTesting)
       _input = _input:cuda()
       local _output = model:forward(_input)
-      _output = output:float()
+      _output = _output:float()
       local _err = criterionMSE:forward(_output, _target)
       _mse = _mse + _err
       _err = criterionNLL:forward(_output, _label)
