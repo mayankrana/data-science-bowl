@@ -31,8 +31,8 @@ function test()
       _output = _output:float()
       local _err = criterionMSE:forward(_output, _target)
       _mse = _mse + _err
-      _err = criterionNLL:forward(_output, _label)
-      nll_error = nll_error + _err
+--      local _err2 = criterionNLL:forward(_output, _label)
+--      nll_error = nll_error + _err2
       confusion:add(_output, _target)
    end
    _mse = math.sqrt(_mse/nTesting)

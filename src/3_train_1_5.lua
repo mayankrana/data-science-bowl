@@ -82,10 +82,10 @@ function train()
             -- estimate df/dW
             df_dw[i] = criterionMSE:backward(outputs[i], targets[i])
             local err = criterionMSE:forward(outputs[i], targets[i])
-            local err2 = criterionNLL:forward(outputs[i], labels[i])
+--            local err2 = criterionNLL:forward(outputs[i], labels[i])
             -- sum individual RMSE
             mse = mse + err
-            nll_error = nll_error + err
+--            nll_error = nll_error + err2
             f = f + err
 --	    confusion:add(output[i],targets[i])
          end
