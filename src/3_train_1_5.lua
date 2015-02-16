@@ -6,7 +6,8 @@ require 'optim'   -- an optimization package, for online and batch methods
 print '=> 3_train.lua'
 print '<3_train.lua>: Defining some tools'
 
-trainLogger = optim.Logger(paths.concat(opt.results_path, 'train.log'))
+trainRMSELogger = optim.Logger(paths.concat(opt.results_path, 'trainRMSE.log'))
+trainNLLLogger = optim.Logger(paths.concat(opt.results_path, 'trainNLL.log'))
 
 if model then
    if opt.retrain ~= "none" then
@@ -115,8 +116,8 @@ function train()
    print('===>epoch: ' .. epoch .. ', NLL (train set): ', nll_error)
    print('')
    print('')
-   trainLogger:add{['RMSE (train set)'] = rmse}
-   trainLogger:add{['NLL_ERROR (train set)'] = nll_error}
+   trainRMSELogger:add{['RMSE (train set)'] = rmse}
+   trainNLLLogger:add{['NLL_ERROR (train set)'] = nll_error}
 --   trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
 
    -- next epoch

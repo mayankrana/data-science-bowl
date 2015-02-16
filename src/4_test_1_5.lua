@@ -5,7 +5,8 @@ require 'image'
 
 print '=> 4_test.lua'
 print '<4_test.lua>: Defining test procedure'
-testLogger = optim.Logger(paths.concat(opt.results_path, 'test.log'))
+testRMSELogger = optim.Logger(paths.concat(opt.results_path, 'testRMSE.log'))
+testNLLLogger = optim.Logger(paths.concat(opt.results_path, 'testNLL.log'))
 
 -- This matrix records the current confusion across classes
 confusion = optim.ConfusionMatrix(class_id_to_name)
@@ -18,23 +19,23 @@ function test()
    local time = sys.clock()
    -- test over test data
    print('<4_test.lua>: Testing on test set:')
-   local mse = 0
+   local _mse = 0
    local nll_error = 0
-   for t = 1,nTesting do
-      if opt.progressBar then xlua.progress(t, nTesting) end
+   for _t = 1,nTesting do
+      if opt.progressBar then xlua.progress(_t, nTesting) end
       -- test sample
       -- target is sparse label
-      local input, target, label = getTest(t, lightTesting)
-      input = input:cuda()
-      local output = model:forward(input)
-      output = output:float()
-      local err = criterionMSE:forward(output, target)
-      mse = mse + err
-      err = criterionNLL:forward(output, label)
-      nll_error = nll_error + err
-      confusion:add(output, target)
+      local _input, _target, _label = getTest(t, lightTesting)
+      _input = _input:cuda()
+      local _output = model:forward(_input)
+      _output = output:float()
+      local _err = criterionMSE:forward(_output, _target)
+      _mse = _mse + _err
+      _err = criterionNLL:forward(_output, _label)
+      nll_error = nll_error + _err
+      confusion:add(_output, _target)
    end
-   mse = math.sqrt(mse/nTesting)
+   _mse = math.sqrt(_mse/nTesting)
    nll_error = nll_error/nTesting
    -- timing
    time = sys.clock() - time
@@ -44,11 +45,11 @@ function test()
 -- print confusion matrix
    print(confusion.totalValid*100)
 
-   print('====> epoch: ' .. epoch .. ', RMSE (test set) : ', mse )
+   print('====> epoch: ' .. epoch .. ', RMSE (test set) : ', _mse )
    print('====> epoch: ' .. epoch .. ', NLL (test set) : ', nll_error )
    print('')
-   testLogger:add{['RMSE (test set)'] = mse}
-   testLogger:add{['NLL_ERROR (test set)'] = nll_error}
+   testRMSELogger:add{['RMSE (test set)'] = _mse}
+   testNLLLogger:add{['NLL_ERROR (test set)'] = nll_error}
 --   testLogger:add{['% mean class accuracy (test set)'] = confusion.totalValid * 100}
    confusion:zero()
 
