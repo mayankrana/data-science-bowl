@@ -31,12 +31,12 @@ function test()
       _output = _output:float()
       local _err = criterionMSE:forward(_output, _target)
       _mse = _mse + _err
---      local _err2 = criterionNLL:forward(_output, _label)
---      nll_error = nll_error + _err2
+      local _err2 = math.log(_output[_label]) --criterionNLL:forward(_output, _label)
+      nll_error = nll_error + _err2
       confusion:add(_output, _target)
    end
    _mse = math.sqrt(_mse/nTesting)
-   nll_error = nll_error/nTesting
+   nll_error = -1 * (nll_error/nTesting)
    -- timing
    time = sys.clock() - time
    time = time/nTesting

@@ -50,5 +50,5 @@ model = nn.Sequential()
 model:add(features)
 model:add(full_layer)
 
-criterionNLL = nn.ClassNLLCriterion()
+--criterionNLL = nn.ClassNLLCriterion()
 criterionMSE = nn.MSECriterion()
