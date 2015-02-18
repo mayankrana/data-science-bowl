@@ -115,7 +115,7 @@ function getSample()
                                  tostring(trainData[_i][1]) .. '.jpg')
    local _im = image.load(_filename, 1)
    _im = dataAugmentation(_im)
-   _im = scale(_im)
+   _im = scaleToSampleSize(_im)
    _im = dataNormalization(_im)
    return _im, trainData[_i][2]
 end
