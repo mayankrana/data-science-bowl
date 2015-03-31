@@ -22,7 +22,7 @@ function random_rotation(_im)
    if _r[1] > 0.5 then
       --if vertical or horizontal random flip is applied then rotation < 90
       --TODO Check if rotations non multiple of pi/2 helps???
-      _im = image.rotate(_im, math.pi * _r[2])
+      _im = image.rotate(_im, math.pi/2)
    end
    return _im
 end
@@ -45,8 +45,8 @@ function random_crop(_im)
 
    local start_x = math.ceil(_r[1] * (_im[1]:size(2) - new_size[2]))
    local start_y = math.ceil(_r[2] * (_im[1]:size(1) - new_size[1]))
-   local end_x = startX + new_size[2]
-   local end_y = startY + new_size[1]
+   local end_x = start_x + new_size[2]
+   local end_y = start_y + new_size[1]
 
    _im = image.crop(_im, start_x, start_y, end_x, end_y)
 
@@ -120,6 +120,7 @@ function middle_crop(_im)
 end
 
 function dataAugmentation(_im)
+--   _im = random_rotation(_im)
    --ZOOM IN + Translational
 --   _im = random_crop(_im)
    --Square crop image preserving the shorter dimension and aspect ratio

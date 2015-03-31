@@ -21,14 +21,18 @@ function test()
    local nll_error = 0
    for t = 1,nTesting do
       if opt.progressBar then xlua.progress(t, nTesting) end
-      -- test sample
-      local input, target = getTest(t, lightTesting)
-      input = input:cuda()
-      local output = model:forward(input)
-      output = output:float()
-      local err = criterion:forward(output, target)
-      nll_error = nll_error + err
-      confusion:add(output, target)
+      local err = 0
+      for it = 1,5 do
+      	  -- test sample
+	  local input, target = getTest(t, lightTesting)
+	  input = input:cuda()
+      	  local output = model:forward(input)
+      	  output = output:float()
+      	  err = err + criterion:forward(output, target)
+	  confusion:add(output, target)
+      end
+      nll_error = nll_error + err/5
+--      confusion:add(output, target)
    end
    nll_error = nll_error/nTesting
    -- timing
@@ -55,7 +59,8 @@ function test()
                                                                       padding=3})
    image.save(opt.results_path .. '/l1color_' .. epoch .. '.png', image.toDisplayTensor{input=weight_l1, padding=3})
 
-   if opt.save then
+   --save model at every 10th epoch
+   if (opt.save and math.fmod(epoch,30)==0) then
       -- save/log current net
       local filename = paths.concat(opt.results_path, 'model_' .. epoch .. '.net')
       os.execute('mkdir -p ' .. sys.dirname(filename))

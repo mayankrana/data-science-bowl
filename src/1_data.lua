@@ -138,8 +138,8 @@ function getTest(_i, light_testing)
    local _im = image.load(_filename, 1)
 --   im = expandTestSample(im, lightTesting)
 --   _im=dataAugmentation(_im)
-   _im = random_crop(_im)
-   _im = scale(_im)
+   _im = random_square_crop(_im)
+   _im = scaleToSampleSize(_im)
    _im=dataNormalization(_im)
 
    return _im, testData[_i][2]
