@@ -10,21 +10,28 @@ fSize = {1, 96, 256, 256, 256}
 featuresOut = fSize[5] * 3 * 3
 
 -- classifier size
-classifierHidden = {1024}
+classifierHidden = {2048}
 dropout_prob = 0.5
 
 features = nn.Sequential()
 features:add(nn.SpatialConvolutionMM(fSize[1], fSize[2], 5, 5, 2, 2, 2)) -- (48+4-4)/2=24
-features:add(nn.Threshold(0,1e-6))
+--features:add(nn.Threshold(0,1e-6))
+features:add(nn.ReLU())
 features:add(nn.SpatialMaxPooling(2,2,2,2)) -- 12
+
 features:add(nn.SpatialConvolutionMM(fSize[2], fSize[3], 3, 3,1,1,1)) -- 12
-features:add(nn.Threshold(0,1e-6))
+--features:add(nn.Threshold(0,1e-6))
+features:add(nn.ReLU())
 features:add(nn.SpatialMaxPooling(2,2,2,2)) -- 6
+
 features:add(nn.SpatialConvolutionMM(fSize[3], fSize[4], 3, 3,1,1,1)) -- 6
-features:add(nn.Threshold(0,1e-6))
+--features:add(nn.Threshold(0,1e-6))
+features:add(nn.ReLU())
 --features:add(nn.SpatialMaxPooling(2,2,2,2)) -- 8
+
 features:add(nn.SpatialConvolutionMM(fSize[4], fSize[5], 3, 3,1,1,1)) -- 6
-features:add(nn.Threshold(0,1e-6))
+--features:add(nn.Threshold(0,1e-6))
+features:add(nn.ReLU())
 features:add(nn.SpatialMaxPooling(2,2,2,2)) -- 3
 features:add(nn.View(featuresOut))-- features size
 
@@ -36,7 +43,10 @@ if opt.dropout then
 end
 
 full_layer:add(nn.Linear(featuresOut, classifierHidden[1]))
-full_layer:add(nn.Threshold(0, 1e-6))
+--full_layer:add(nn.View(classifierHidden[1]/2,2))
+--full_layer:add(nn.Threshold(0, 1e-6))
+--full_layer:add(nn.TemporalMaxPooling(2,2))
+full_layer:add(nn.ReLU())
 
 if opt.dropout then
    dropouts = nn.Dropout(dropout_prob)

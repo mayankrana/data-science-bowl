@@ -16,7 +16,7 @@ local i=1
 class_id_to_name = {}
 class_name_to_id = {}
 
-function getClassInfo()  
+function getClassInfo()
    local n_classes = 0
    if not paths.filep(dataRoot .. 'cache/class_info.dat') then
       --Read the sample submission csv to get the names of all the classes and
@@ -115,7 +115,7 @@ function getSample()
                                  tostring(trainData[_i][1]) .. '.jpg')
    local _im = image.load(_filename, 1)
    _im = dataAugmentation(_im)
-   _im = scale(_im)
+   _im = scaleToSampleSize(_im)
    _im = dataNormalization(_im)
    return _im, trainData[_i][2]
 end
@@ -138,8 +138,8 @@ function getTest(_i, light_testing)
    local _im = image.load(_filename, 1)
 --   im = expandTestSample(im, lightTesting)
 --   _im=dataAugmentation(_im)
-   _im = random_crop(_im)
-   _im = scale(_im)
+   _im = random_square_crop(_im)
+   _im = scaleToSampleSize(_im)
    _im=dataNormalization(_im)
 
    return _im, testData[_i][2]

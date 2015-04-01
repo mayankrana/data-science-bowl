@@ -10,13 +10,13 @@ cmd:text('Options:')
 cmd:option('-seed',            1,           'fixed input seed for repeatable experiments')
 cmd:option('-threads',         1,           'number of threads')
 cmd:option('-gpuid',           1,           'gpu id')
-cmd:option('-save',            false,       'save models')
+cmd:option('-save',            true,       'save models')
 cmd:option('-log',             true,        'save log')
 cmd:option('-plot',            false,       'save plot for error')
-cmd:option('-results_path',    'results/exp_tmp_2',   'subdirectory to save/log experiments in')
+cmd:option('-results_path',    'results/exp_1_17',   'subdirectory to save/log experiments in')
 cmd:option('-learningRate',    1e-1,        'learning rate at t=0')--5e-2
-cmd:option('-learningRateDecay',  1e-4,        'learning rate decay')--5e-7
-cmd:option('-momentum',        0.6,         'momentum')--0.6
+cmd:option('-learningRateDecay',  1e-6,        'learning rate decay')--5e-7
+cmd:option('-momentum',        0.8,         'momentum')--0.6
 cmd:option('-weightDecay',     1e-5,        'weight decay')--1e-5
 cmd:option('-batchSize',       32,          'mini-batch size (1 = pure stochastic)')
 cmd:option('-progressBar',     true,        'Display a progress bar')
@@ -42,11 +42,11 @@ epochSize = opt.batchSize * 1000 --32k
 
 --Max number of epochs to run the experiment for
 --Keep it higher and kill the process upon convergence
-maxEpochs = 50
+maxEpochs = 500
 
 dofile('1_data.lua')
 if not opt.dataTest then
-   dofile('2_model_size_48_2_hidden_2048.lua')
+   dofile('2_model_1_13.lua')
    dofile('3_train.lua')
    dofile('4_test.lua')
 
@@ -57,8 +57,10 @@ if not opt.dataTest then
       epoch = epoch + 1
       collectgarbage()
       train()
-      collectgarbage()
-      test()
+      if (math.fmod(epoch,10)==0)then
+         collectgarbage()
+         test()
+      end
 
       --Save train and test score to log files
 
